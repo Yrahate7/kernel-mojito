@@ -184,7 +184,7 @@
 			mi,qc3-ffc-bat-volt-max = <4470>;
 			mi,qc3-bat-curr-max = <5400>;
 			mi,qc3-bus-volt-max = <12000>;
-			mi,qc3-bus-curr-max = <2100>;
+			mi,qc3-bus-curr-max = <2250>;
 	};
 
 	usbpd_pm {
@@ -481,9 +481,9 @@
 	//qcom,fcc-stepping-enable;
 	qcom,suspend-input-on-debug-batt;
 	qcom,sec-charger-config = <0>;
-	qcom,thermal-mitigation = <6000000 5500000 4900000 4600000 4500000 4400000 4200000
-				   3800000 3800000 3600000 3400000 3200000 3000000 2200000
-				   800000 300000>;
+	qcom,thermal-mitigation = <6000000 5500000 4900000 4400000 4000000 3800000 3600000
+				   3300000 3000000 2700000 2400000 2100000 1800000 1500000
+				   1000000 300000>;
 	dpdm-supply = <&qusb_phy0>;
 	qcom,charger-temp-max = <800>;
 	qcom,smb-temp-max = <800>;
