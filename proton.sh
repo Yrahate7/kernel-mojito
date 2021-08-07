@@ -21,7 +21,6 @@ function compile() {
 			  CROSS_COMPILE_ARM32=arm-linux-gnueabi-
 
     if ! [ -a "$IMAGE" ]; then
-        finerr
         exit 1
     fi
     cp out/arch/arm64/boot/Image.gz-dtb AnyKernel
