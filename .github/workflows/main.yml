@@ -47,3 +47,4 @@ jobs:
         with:
           artifacts: "./kernel-mojito_cmi.zip"
           token: ${{ secrets.GITHUB_TOKEN }}
+          allowUpdates: true
