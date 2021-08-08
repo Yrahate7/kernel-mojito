@@ -34,7 +34,7 @@ jobs:
         NAME: Dark-Ages-Último
       with:
         arch: arm64
-        compiler: proton-clang/master, proton-clang/09fb113/binutils
+        compiler: aosp-clang/master/clang-r416183b, aosp-clang/android11-release/clang-r365631c/binutils
         defconfig: mojito_defconfig
         image: Image.gz-dtb
 
