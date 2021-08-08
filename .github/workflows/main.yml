@@ -42,9 +42,12 @@ jobs:
         run: |
           cp out/arch/arm64/boot/Image.gz-dtb AnyKernel3/
           cd AnyKernel3
-          VERSION="$(cat ../kernel-mojito/arch/arm64/configs/mojito_defconfig | grep "CONFIG_LOCALVERSION\=" | sed -r 's/.*"(.+)".*/\1/' | sed 's/^.//')"
+          VERSION="kernel-mojito"
           7z a -mx9 ${VERSION}.zip *
           zipalign -v 4 ${VERSION}.zip ../${VERSION}_cmi.zip
           cd ..
-          curl -sL https://git.io/file-transfer | bash -s beta
-          ./transfer wet ${VERSION}_cmi.zip
+      - uses: ncipollo/release-action@v1
+        with:
+          artifacts: "./kernel-mojito.zip"
+          bodyFile: "First CI build"
+          token: ${{ secrets.GITHUB_TOKEN }}
