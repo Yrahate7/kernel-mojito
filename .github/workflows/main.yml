@@ -48,6 +48,5 @@ jobs:
           cd ..
       - uses: ncipollo/release-action@v1
         with:
-          artifacts: "./kernel-mojito.zip"
-          bodyFile: "First CI build"
+          artifacts: "./kernel-mojito_cmi.zip"
           token: ${{ secrets.GITHUB_TOKEN }}
