@@ -17,17 +17,29 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    
     steps:
-      - name: Check Out Repo 
-        uses: actions/checkout@v2
+    - name: Checkout kernel source
+      uses: actions/checkout@v2
 
-      - name: useDocker
-        uses: z4nyx/docker:@latest
-       
-      - run: 
-           git config --global user.name "YashRahate"
-           git config --global user.email "yrahate7@gmail.com"
-           git config --global color.ui false
-           bash build.sh
-    
+    - name: Checkout zipper
+      uses: actions/checkout@v2
+      with:
+        repository: lemniskett/AnyKernel3
+        path: zipper
+
+    - name: Android kernel build
+      uses: lemniskett/android-kernel-actions@master
+      id: build
+      env:
+        NAME: Dark-Ages-Último
+      with:
+        arch: arm64
+        compiler: proton-clang/master, proton-clang/09fb113/binutils
+        defconfig: mojito_defconfig
+        image: Image.gz-dtb
+
+    - name: Release build
+      uses: ncipollo/release-action@v1
+      with:
+        artifacts: ${{ steps.build.outputs.outfile }}
+        token: ${{ secrets.GITHUB_TOKEN }}
