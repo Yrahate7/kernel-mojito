@@ -133,3 +133,5 @@ Android.bp
 # Build
 build.sh
 out/*
+AnyKernel/
+clang
