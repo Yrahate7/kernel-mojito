@@ -1,0 +1,49 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  push:
+    tags: "*"
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  KernelMojito:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch Dependencies
+        run: |
+          sudo apt update -y
+          sudo apt-get install -y zipalign openssl ccache bc bash git-core gnupg build-essential zip curl make automake autogen autoconf autotools-dev libtool shtool python  m4 gcc libtool zlib1g-dev flex libssl-dev gcc-aarch64-linux-gnu gcc-arm-linux-gnueabi python2
+      - name: Fetch Kernel source, clang and anykernel source
+        run: |
+          git clone https://oauth2:${{ secrets.TOKEN }}@github.com/Yrahate7/kernel-mojito.git --depth=1
+          git clone https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86 --depth=1
+          mv linux-x86/clang-r416183c clang
+          rm -rf linux-x86
+          git clone --depth=1 https://github.com/venom-stark/AnyKernel3.git
+      - name: Export toolchain, Setup args, Compile kernel
+        run: |
+          CLANG_DIR=../clang
+          export KBUILD_BUILD_USER="yrahate7"
+          export KBUILD_BUILD_HOST="Workspace"
+          args="O=../out ARCH=arm64 CC=${CLANG_DIR}/bin/clang CLANG_TRIPLE=aarch64-linux-gnu- CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_ARM32=arm-linux-gnueabi- LD=${CLANG_DIR}/bin/ld.lld"
+          cd kernel-mojito
+          make ${args} mojito_defconfig
+          make -j16 ${args}
+      - name: Upload release artifacts
+        run: |
+          cp out/arch/arm64/boot/Image.gz-dtb AnyKernel3/
+          cd AnyKernel3
+          VERSION="kernel-mojito"
+          7z a -mx9 ${VERSION}.zip *
+          zipalign -v 4 ${VERSION}.zip ../${VERSION}_cmi.zip
+          cd ..
+      - uses: ncipollo/release-action@v1
+        with:
+          artifacts: "./kernel-mojito_cmi.zip"
+          token: ${{ secrets.GITHUB_TOKEN }}
+          allowUpdates: true
